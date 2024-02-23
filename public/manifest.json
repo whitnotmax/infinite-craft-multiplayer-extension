@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Test extension",
+  "name": "Infinite Craft Multiplayer Extension",
   "version": "1.0",
-  "description": "React chrome extension",
+  "description": "Multiplayer functionality for the online game Infinite Craft",
   "permissions": ["activeTab", "tabs", "storage", "*://*/*"],
   "browser_action": {
     "default_popup": "index.html"
