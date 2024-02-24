@@ -87,7 +87,7 @@ module.exports = {
 
     // Create the stylesheet under 'styles' directory
     new MiniCssExtractPlugin({
-      filename: "styles/styles.[hash].css",
+      filename: "styles/[name].css",
     }),
 
     new CopyWebpackPlugin({

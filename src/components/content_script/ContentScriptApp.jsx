@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import useLocalStorageValue from "./hooks/useLocalStorageValue";
-
+import useLocalStorageValue from "../hooks/useLocalStorageValue";
+import Modal from "./Modal.jsx";
 const DEFAULT_DATA = '{"elements":[{"text":"Water","emoji":"💧","discovered":false},{"text":"Fire","emoji":"🔥","discovered":false},{"text":"Wind","emoji":"🌬️","discovered":false},{"text":"Earth","emoji":"🌍","discovered":false}]}'
 const DATA_LOCALSTORAGE_KEY = 'infinite-craft-data';
 
@@ -19,6 +19,7 @@ const ContentScriptApp = () => {
     }
     
     useEffect(() => {
+        console.log("Content script init");
         chrome.runtime.onMessage.addListener((data, sender) => {
             console.log(data);
             if (data.message === "reload") {
@@ -41,7 +42,7 @@ const ContentScriptApp = () => {
     }, [isMultiplayerMode, savedCrafts]);
     return (
         <>
-            
+            <Modal/>
         </>
     )
 }

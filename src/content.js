@@ -1,6 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import ContentScriptApp from "./components/ContentScriptApp.jsx";
+import ContentScriptApp from "./components/content_script/ContentScriptApp.jsx";
 
 const domRoot = document.createElement("div");
 domRoot.id = "extension-root";

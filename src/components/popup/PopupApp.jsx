@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./PopupApp.css";
-import useCurrentTab from "./hooks/useCurrentTab";
-import useLocalStorageValue from "./hooks/useLocalStorageValue";
-import { useContent } from "./hooks/useContent";
+import useCurrentTab from "../hooks/useCurrentTab";
+import useLocalStorageValue from "../hooks/useLocalStorageValue";
+import { useContent } from "../hooks/useContent";
 
 const PopupApp = () => {
     const INFINITE_CRAFT_URL = "https://neal.fun/infinite-craft/";

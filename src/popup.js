@@ -1,7 +1,7 @@
 /*global chrome*/
 import React from "react"
 import ReactDOM from "react-dom/client"
-import PopupApp from "./components/PopupApp.jsx";
+import PopupApp from "./components/popup/PopupApp.jsx";
 
 // console.log = (data) => {
 //   console.log(data)

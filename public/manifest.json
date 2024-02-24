@@ -16,7 +16,8 @@
   "content_scripts": [
     {
       "matches": ["https://neal.fun/infinite-craft/"],
-      "js": ["static/content.js"]
+      "js": ["static/content.js"],
+      "css": ["styles/content.css"]
     }
   ],
   "web_accessible_resources": ["index.html"]
