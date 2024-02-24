@@ -7,14 +7,11 @@ const useLocalStorageValue = (key) => {
 
     const updateValue = () => {
         chrome.storage.local.get((items) => {
-            console.log(items);
-            console.log(items[key]);
             setValue(items[key]); 
         });
     }
     useEffect(() => {
         chrome.storage.onChanged.addListener(function(changes, area) {
-            console.log("storage change");
             updateValue();
         });
 
@@ -23,7 +20,6 @@ const useLocalStorageValue = (key) => {
     }, []);
 
     const setLocalStorageValue = (val) => {
-        console.log("Hook set called");
         chrome.storage.local.set({
             [key]: val
         });
