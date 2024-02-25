@@ -42,7 +42,9 @@ const ContentScriptApp = () => {
     }, [isMultiplayerMode, savedCrafts]);
     return (
         <>
-            <Modal/>
+            <div className="extension-content">
+                {isMultiplayerMode && <Modal/>}
+            </div>
         </>
     )
 }

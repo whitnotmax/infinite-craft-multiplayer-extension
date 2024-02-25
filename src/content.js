@@ -4,7 +4,7 @@ import ContentScriptApp from "./components/content_script/ContentScriptApp.jsx";
 
 const domRoot = document.createElement("div");
 domRoot.id = "extension-root";
-document.body.appendChild(domRoot);
+document.body.insertBefore(domRoot, document.body.firstChild);
 
 const root = createRoot(domRoot);
 root.render(<ContentScriptApp/>);

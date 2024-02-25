@@ -43,10 +43,7 @@ module.exports = {
           {
             loader: "css-loader",
             options: {
-              modules: {
-                exportLocalsConvention: "camelCaseOnly",
-                namedExport: true,
-              },
+              modules: false,
               sourceMap: true,
               importLoaders: 1,
             },
