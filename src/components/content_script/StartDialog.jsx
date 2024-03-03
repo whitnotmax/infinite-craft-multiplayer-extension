@@ -1,4 +1,5 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import Modal from "./Modal.jsx";
 import "./StartDialog.css";
 import "../common/buttons.css";
 const StartDialog = () => {
@@ -13,29 +14,30 @@ const StartDialog = () => {
     }
     return (
         <span id="start-dialog">
-            <section>
-                <h3>Create a game</h3>
+            <section className="start-dialog-section">
+                <h3 className="start-dialog-header">Create a game</h3>
                 <div className="centered">
-                    <p>This will create a game code that the other player will use to join.</p>
-                    <button className="confirm-button">Go</button>
+                    <p className="start-dialog-text">This will create a game code that the other player will use to join.</p>
+                    <button className="confirm-button start-dialog-button">Go</button>
                 </div>
             </section>
 
-            <section id="divider">
+            <section id="start-dialog-divider">
                 <div id="vertical-line" />
             </section>
 
-            <section>
-                <h3>Join a game</h3>
+            <section className="start-dialog-section">
+                <h3 className="start-dialog-header">Join a game</h3>
                 <div className="centered">
-                    <p>Enter the game code given to you by the other player.</p>
-                    <input type="text" onKeyDown={onKeyDown} ref={inputRef}></input>
+                    <p className="start-dialog-text"> Enter the game code given to you by the other player.</p>
+                    <input id="start-dialog-input" type="text" onKeyDown={onKeyDown} ref={inputRef}></input>
                 </div>
 
                 <div className="centered">
-                    <button className="confirm-button" onClick={onClick}>Go</button>
+                    <button className="confirm-button start-dialog-button" onClick={onClick}>Go</button>
                 </div>
             </section>
+
         </span>
     )
 }

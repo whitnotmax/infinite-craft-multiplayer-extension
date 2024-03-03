@@ -6,11 +6,11 @@
     width: 100%;
 }
 
-section {
+.start-dialog-section {
     width: 49.5%;
 }
 
-#divider {
+#start-dialog-divider {
     width: 1%;
 
 }
@@ -25,7 +25,7 @@ section {
     border-left: 1px solid #c2c2c2; /* Adjust color and thickness as needed */
     height: 100%; /* Adjust the height of the line as needed */
 }
-p, h3 {
+.start-dialog-text, .start-dialog-header {
     text-align: center;
     padding-top: 10%;
     padding-left: 1%;
@@ -33,18 +33,14 @@ p, h3 {
 
 }
 
-
-
-
-
-button {
+.start-dialog-button {
     position: absolute;
     bottom: 5%;
     width: 10%;
     height: 8%;
 }
 
-input {
+#start-dialog-input {
     position: absolute;
     bottom: 50%;
     width: 40%;
