@@ -1,11 +1,12 @@
 import "./Modal.css";
-import React from "react";
-const Modal = () => {
+import React, { useEffect } from "react";
+const Modal = ({ children }) => {
+
     return (
         <div className="modal">
             <div className="overlay"></div>
             <div className="modal-content">
-                <h1>asdfasdfsadf</h1>
+                {children}
             </div>
         </div>
 

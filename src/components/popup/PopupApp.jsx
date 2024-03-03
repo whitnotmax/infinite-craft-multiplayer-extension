@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./PopupApp.css";
+import "../common/buttons.css";
 import useCurrentTab from "../hooks/useCurrentTab";
 import useLocalStorageValue from "../hooks/useLocalStorageValue";
 import { useContent } from "../hooks/useContent";
@@ -24,7 +25,7 @@ const PopupApp = () => {
             {isInfiniteCraft ? (
                 <>
                 <span>You are playing Infinite Craft in <strong>{isMultiplayerMode ? "multiplayer" : "singleplayer"}</strong> mode.</span>
-                <button onClick={handleButtonClick} disabled={!isInfiniteCraft}>
+                <button class="confirm-button" onClick={handleButtonClick} disabled={!isInfiniteCraft}>
                     {isInfiniteCraft ? `Reload in ${isMultiplayerMode ? "single": "multi"}player mode`
                         : "You are not on Infinite Craft!" }
                 </button>

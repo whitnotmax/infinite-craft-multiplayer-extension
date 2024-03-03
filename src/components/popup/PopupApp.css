@@ -9,22 +9,9 @@ main {
 }
 
 button {
-    background-color: #1ee338;
-    border-radius: 10px;
-    padding: 5%;
     width: 250px;
-    color: black;
-    border: 1px solid black;
+    height: 50px;
 }
 
-button:disabled {
-    background-color: lightgray;
-    color: gray;
-    cursor: not-allowed;
-    pointer-events: none;
-}
 
-button:active {
-    background-color: #0b4f14;
-}
 

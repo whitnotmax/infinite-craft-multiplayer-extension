@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import useLocalStorageValue from "../hooks/useLocalStorageValue";
 import Modal from "./Modal.jsx";
+import StartDialog from "./StartDialog.jsx";
 const DEFAULT_DATA = '{"elements":[{"text":"Water","emoji":"💧","discovered":false},{"text":"Fire","emoji":"🔥","discovered":false},{"text":"Wind","emoji":"🌬️","discovered":false},{"text":"Earth","emoji":"🌍","discovered":false}]}'
 const DATA_LOCALSTORAGE_KEY = 'infinite-craft-data';
 
@@ -43,7 +44,11 @@ const ContentScriptApp = () => {
     return (
         <>
             <div className="extension-content">
-                {isMultiplayerMode && <Modal/>}
+                {isMultiplayerMode && (
+                        <Modal>
+                            <StartDialog />
+                        </Modal>
+                )}
             </div>
         </>
     )

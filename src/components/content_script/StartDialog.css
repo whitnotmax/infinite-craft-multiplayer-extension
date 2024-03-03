@@ -1,0 +1,55 @@
+
+#start-dialog {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+}
+
+section {
+    width: 49.5%;
+}
+
+#divider {
+    width: 1%;
+
+}
+
+.centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#vertical-line {
+    border-left: 1px solid #c2c2c2; /* Adjust color and thickness as needed */
+    height: 100%; /* Adjust the height of the line as needed */
+}
+p, h3 {
+    text-align: center;
+    padding-top: 10%;
+    padding-left: 1%;
+    padding-right: 1%;
+
+}
+
+
+
+
+
+button {
+    position: absolute;
+    bottom: 5%;
+    width: 10%;
+    height: 8%;
+}
+
+input {
+    position: absolute;
+    bottom: 50%;
+    width: 40%;
+    height: 10%;
+    border-radius: 2px;
+    border: 1px solid black;
+    font-size: large;
+}
