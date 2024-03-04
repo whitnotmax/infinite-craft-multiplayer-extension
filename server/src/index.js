@@ -11,20 +11,25 @@ const corsOptions = {
   app.use(cors(corsOptions));
 const wsServer = new ws.Server({ noServer: true });
 
-function createGame(id) {
+function createRoom(id) {
     return {
-        "id": id,
-        players: []
+        "roomID": id,
+        players: [],
+        messages: [],
+        _internalState: {
+            totalConnected: 0
+        }
     }
 }
 
-function createPlayer(name, socket) {
+function createPlayer(name, isHost, socket) {
     const id = v4();
     sockets[id] = socket;
     return {
-        "id": id,
+        "playerID": id,
         "name": name,
-        words: []
+        "words": [],
+        "isHost": isHost
     }
 }
 
@@ -41,8 +46,22 @@ function sendData(socket, reason, details, target) {
         "details": details
     }
 
+    console.log("UHG");
+    console.log(response.details);
+    if (response.details._internalState != undefined) {
+        console.log('removing internal state');
+        delete response.details._internalState;
+    }
 
     socket.send(JSON.stringify(response));
+}
+
+function updateStateForAll(game) {
+    game.players.forEach(player => {
+        sendData(sockets[player.playerID], "UPDATE_GAME_STATE", {
+            ...game
+        }, player.playerID);
+    });
 }
 const games = [];
 
@@ -56,13 +75,13 @@ app.post("/new-game", (req, res) => {
         id = Math.round(Math.random() * 10 * 1000);
         unique = true;
         for (let game in games) {
-            if (game.id === id) {
+            if (game.roomID === id) {
                 unique = false;
                 break;
             }
         }
     }
-    games.push(createGame(id));
+    games.push(createRoom(id));
     res.status(200).json(id);
 });
 
@@ -73,7 +92,7 @@ wsServer.on('connection', socket => {
     socket.on("message", data => {
         data = JSON.parse(data);
         if (data.reason === "JOIN_GAME") {
-            const matches = games.filter(game => game.id === data.details.id);
+            const matches = games.filter(game => game.roomID === data.details.id);
             if (matches.length === 0) {
                 sendData(socket, "UPDATE_GAME_STATE", {
                     "error": "Room does not exist"
@@ -97,11 +116,14 @@ wsServer.on('connection', socket => {
                     return;
                 }
                 
-                const newPlayer = createPlayer(`Player${game.players.length + 1}`, socket);
+                const newPlayer = createPlayer(`Player${game.players.length + 1}`, game.players.length === 0, socket);
                 game.players.push(newPlayer);
+                game._internalState.totalConnected++;
                 sendData(socket, "UPDATE_GAME_STATE", {
-                    game
-                }, newPlayer.id);
+                    ...game
+                }, newPlayer.playerID);
+                game.messages.push(`${newPlayer.name} has joined the room.`)
+                updateStateForAll(game);
 
             }
         }
@@ -109,12 +131,23 @@ wsServer.on('connection', socket => {
 
     socket.on('close', () => {
         games.forEach(game => {
-            const match = game.players.filter(player => sockets[player.id] === socket);
+            const match = game.players.filter(player => sockets[player.playerID] === socket);
             if (match.length > 0) {
                 const player = match[0];
-                console.log(`${player.name} on game ${game.id} has left`);
+                console.log(`${player.name} on game ${game.roomID} has left`);
                 game.players.splice(game.players.indexOf(player), 1);
-                delete sockets[player.id];
+                game.messages.push(`${player.name} has left the room.`)
+                
+                if (game.players.length === 0) {
+                    delete games[games.indexOf(game)];
+                } else {
+                    if (player.isHost) {
+                        game.players[0].isHost = true;
+                        game.messages.push(`${game.players[0].name} is now the host.`);
+                    }
+                    updateStateForAll(game);
+                }
+                delete sockets[player.playerID];
                 console.log(game);
             }
         })

@@ -2,9 +2,10 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import Modal from "./Modal.jsx";
 import "./StartDialog.css";
 import "../common/buttons.css";
-import { WebSocketContext } from "./ContentScriptApp.jsx";
+import { WebSocketContext, GameStateContext } from "./ContentScriptApp.jsx";
 const StartDialog = () => {
     const webSocket = useContext(WebSocketContext);
+    const gameState = useContext(GameStateContext);
     const inputRef = useRef();
 
     const onKeyDown = (e) => {
@@ -29,6 +30,8 @@ const StartDialog = () => {
         console.log(parseInt(inputRef.current.value));
         webSocket.sendData("JOIN_GAME", { id: parseInt(inputRef.current.value) });
     }
+
+
 
     return (
         <span id="start-dialog">
@@ -57,6 +60,8 @@ const StartDialog = () => {
             </section>
 
         </span>
+
+        
     )
 }
 

@@ -3,9 +3,10 @@ import useLocalStorageValue from "../hooks/useLocalStorageValue";
 import Modal from "./Modal.jsx";
 import StartDialog from "./StartDialog.jsx";
 import LobbyDialog from "./LobbyDialog.jsx";
+
 const DEFAULT_DATA = '{"elements":[{"text":"Water","emoji":"💧","discovered":false},{"text":"Fire","emoji":"🔥","discovered":false},{"text":"Wind","emoji":"🌬️","discovered":false},{"text":"Earth","emoji":"🌍","discovered":false}]}'
 const DATA_LOCALSTORAGE_KEY = 'infinite-craft-data';
-
+const WEBSOCKET_NORMAL_CLOSE = 1000;
 
 export const WebSocketContext = createContext();
 export const GameStateContext = createContext();
@@ -27,7 +28,7 @@ const ContentScriptApp = () => {
         }
     });
 
-    const [gameState, setGameState] = useState({});
+    const [gameState, setGameState] = useState();
     
     let oldData = null;
 
@@ -74,12 +75,17 @@ const ContentScriptApp = () => {
             }));
         });
 
-        webSocket.addEventListener("close", () => {
-            setWebSocketState(prevData => ({
-                ...prevData,
-                isConnected: false,
-                error: "The connection was lost."
-            }));
+        webSocket.addEventListener("close", e => {
+            if (e.wasClean) {
+                window.location.reload();
+            } else {
+                setWebSocketState(prevData => ({
+                    ...prevData,
+                    isConnected: false,
+                    error: "The connection was lost."
+                }));
+            }
+            
         });
     
         webSocket.addEventListener("message", e => {
@@ -112,21 +118,35 @@ const ContentScriptApp = () => {
             window.location.reload();
         }
     }, [webSocketState]);
+
+    useEffect(() => {
+        if (gameState?.error) {
+            alert(gameState?.error);
+        }
+    }, [gameState]);
     return (
         <WebSocketContext.Provider value={webSocketState}>
             <GameStateContext.Provider value={gameState}>
                 <div className="extension-content">
-                    {isMultiplayerMode && !webSocketState.error && (
+                    {isMultiplayerMode && !webSocketState?.error && (
                         <>
-                        <Modal>
-                            {webSocketState.isConnected ? (
-                                <StartDialog />
-                            ) : (
-                                <>
+                            {!webSocketState.isConnected && (
+                                <Modal>
                                     <h1>Loading...</h1>
-                                </>
+                                </Modal>
                             )}
-                        </Modal>                  
+
+                            {webSocketState.isConnected && (!gameState || gameState?.error) && (
+                                <Modal>
+                                    <StartDialog />
+                                </Modal>
+                            )}
+
+                            {webSocketState.isConnected && (gameState && !gameState?.error) && (
+                                <Modal>
+                                    <LobbyDialog />
+                                </Modal>
+                            )}  
                         </>
                     )}
                 </div>
