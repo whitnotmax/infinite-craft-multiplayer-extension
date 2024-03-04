@@ -73,6 +73,14 @@ const ContentScriptApp = () => {
                 error: err
             }));
         });
+
+        webSocket.addEventListener("close", () => {
+            setWebSocketState(prevData => ({
+                ...prevData,
+                isConnected: false,
+                error: "The connection was lost."
+            }));
+        });
     
         webSocket.addEventListener("message", e => {
             const data = JSON.parse(e.data);
@@ -100,7 +108,7 @@ const ContentScriptApp = () => {
 
     useEffect(() => {
         if (webSocketState.error != null) {
-            alert("An error occurred in the connection and Multiplayer Mode cannot continue.");
+            alert(`An error occurred and Multiplayer Mode cannot continue${webSocketState.error === "" ? "." : ": " + webSocketState.error}`);
             window.location.reload();
         }
     }, [webSocketState]);

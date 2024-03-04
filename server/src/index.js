@@ -78,6 +78,8 @@ wsServer.on('connection', socket => {
                 sendData(socket, "UPDATE_GAME_STATE", {
                     "error": "Room does not exist"
                 });
+                return;
+
             } else {
                 const game = matches[0];
 
@@ -85,7 +87,16 @@ wsServer.on('connection', socket => {
                     sendData(socket, "UPDATE_GAME_STATE", {
                         "error": "Room is full"
                     });
+                    return;
                 }
+
+                if (Object.values(sockets).includes(socket)) {
+                    sendData(socket, "UPDATE_GAME_STATE", {
+                        "error": "You cannot be in more than one game at the same time."
+                    });
+                    return;
+                }
+                
                 const newPlayer = createPlayer(`Player${game.players.length + 1}`, socket);
                 game.players.push(newPlayer);
                 sendData(socket, "UPDATE_GAME_STATE", {
