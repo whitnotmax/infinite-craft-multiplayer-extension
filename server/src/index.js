@@ -116,9 +116,8 @@ wsServer.on('connection', socket => {
                     return;
                 }
                 
-                const newPlayer = createPlayer(`Player${game.players.length + 1}`, game.players.length === 0, socket);
+                const newPlayer = createPlayer(`Player${++game._internalState.totalConnected}`, game.players.length === 0, socket);
                 game.players.push(newPlayer);
-                game._internalState.totalConnected++;
                 sendData(socket, "UPDATE_GAME_STATE", {
                     ...game
                 }, newPlayer.playerID);
