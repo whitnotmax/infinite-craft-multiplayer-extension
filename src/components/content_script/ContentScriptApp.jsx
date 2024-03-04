@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import useLocalStorageValue from "../hooks/useLocalStorageValue";
 import Modal from "./Modal.jsx";
 import StartDialog from "./StartDialog.jsx";
@@ -6,9 +6,28 @@ import LobbyDialog from "./LobbyDialog.jsx";
 const DEFAULT_DATA = '{"elements":[{"text":"Water","emoji":"💧","discovered":false},{"text":"Fire","emoji":"🔥","discovered":false},{"text":"Wind","emoji":"🌬️","discovered":false},{"text":"Earth","emoji":"🌍","discovered":false}]}'
 const DATA_LOCALSTORAGE_KEY = 'infinite-craft-data';
 
+
+export const WebSocketContext = createContext();
+export const GameStateContext = createContext();
+const webSocket = new WebSocket("ws://localhost:8080");
+
+
 const ContentScriptApp = () => {
     const [savedCrafts, setSavedCrafts] = useLocalStorageValue("saved_crafts");
-    const [isMultiplayerMode, setIsMultiplayerMode] = useLocalStorageValue("is_multiplayer");  
+    const [isMultiplayerMode, setIsMultiplayerMode] = useLocalStorageValue("is_multiplayer");
+
+    const [webSocketState, setWebSocketState] = useState({
+        ws: webSocket,
+        isConnected: false,
+        error: null,
+        sendData: (reason, details) => {
+            console.log("sending data");
+            console.log({"reason": reason, "details": details});
+            webSocket.send(JSON.stringify({"reason": reason, "details": details}));
+        }
+    });
+
+    const [gameState, setGameState] = useState({});
     
     let oldData = null;
 
@@ -28,6 +47,42 @@ const ContentScriptApp = () => {
                 window.location.reload();
             }
         });
+
+        
+
+
+    }, []);
+
+    useEffect(() => {
+        setWebSocketState(prevData => ({
+            ...prevData,
+            isConnected: webSocketState.ws.readyState
+        }));
+        webSocket.addEventListener("open", () => {
+            console.log("Connection ready");
+            setWebSocketState(prevData => ({
+                ...prevData,
+                isConnected: true
+            }));
+        });
+    
+        webSocket.addEventListener("error", (err) => {
+            setWebSocketState(prevData => ({
+                ...prevData,
+                isConnected: false,
+                error: err
+            }));
+        });
+    
+        webSocket.addEventListener("message", e => {
+            const data = JSON.parse(e.data);
+            console.log(data);
+            if (data.reason === "UPDATE_GAME_STATE") {
+                console.log("Game state update");
+                setGameState(data.details);
+                console.log(data.details);
+            }
+        });
     }, []);
 
     useEffect(() => {
@@ -42,18 +97,33 @@ const ContentScriptApp = () => {
             setInterval(checkForChanges, 100);
         }
     }, [isMultiplayerMode, savedCrafts]);
+
+    useEffect(() => {
+        if (webSocketState.error != null) {
+            alert("An error occurred in the connection and Multiplayer Mode cannot continue.");
+            window.location.reload();
+        }
+    }, [webSocketState]);
     return (
-        <>
-            <div className="extension-content">
-                {isMultiplayerMode && (
-                    <>
-                    <Modal>
-                        <LobbyDialog />
-                    </Modal>                  
-                    </>
-                )}
-            </div>
-        </>
+        <WebSocketContext.Provider value={webSocketState}>
+            <GameStateContext.Provider value={gameState}>
+                <div className="extension-content">
+                    {isMultiplayerMode && !webSocketState.error && (
+                        <>
+                        <Modal>
+                            {webSocketState.isConnected ? (
+                                <StartDialog />
+                            ) : (
+                                <>
+                                    <h1>Loading...</h1>
+                                </>
+                            )}
+                        </Modal>                  
+                        </>
+                    )}
+                </div>
+            </GameStateContext.Provider>
+        </WebSocketContext.Provider>
     )
 }
 

@@ -7,15 +7,19 @@
     "dev": "nodemon",
     "prebuild": "rimraf dist",
     "build-prod": "cross-env NODE_ENV=production webpack --config webpack.config.production.js",
-    "build": "cross-env NODE_ENV=development webpack --config webpack.config.js"
+    "build": "cross-env NODE_ENV=development webpack --config webpack.config.js",
+    "start-server": "node --watch ./server/src"
   },
   "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.3",
     "nodemon": "^3.1.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-delay-render": "^0.1.2",
     "react-dom": "^18.2.0",
-    "react-imported-component": "^6.5.3"
+    "react-imported-component": "^6.5.3",
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "@babel/core": "^7.22.1",
