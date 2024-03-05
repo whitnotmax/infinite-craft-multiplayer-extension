@@ -17,7 +17,7 @@ const LobbyDialog = () => {
         if (!match)
             return false;
 
-        return match[0].isHost;
+        return match[0].isHost; 
     }
 
     return (
@@ -35,7 +35,7 @@ const LobbyDialog = () => {
                                     <span key={player.playerID + "-host"} className="lobby-dialog-extra-info"> (host)</span>
                                 )}
 
-                                {gameState?.you === player.id && (
+                                {gameState?.you === player.playerID && (
                                     <span key={player.playerID + "-you"} className="lobby-dialog-extra-info"> (you)</span>
                                 )}
                             </span>
