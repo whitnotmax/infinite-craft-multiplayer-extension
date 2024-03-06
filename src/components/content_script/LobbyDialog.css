@@ -76,3 +76,10 @@
     font-size: small;
     color: #8a8a8a;
 }
+
+#lobby-countdown-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}

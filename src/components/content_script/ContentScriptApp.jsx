@@ -137,14 +137,6 @@ const ContentScriptApp = () => {
             alert(gameState?.error);
         }
 
-        // HACK: during gameplay, we need the root-level element to let mouse input through to lower layers
-        // but it is not managed by react!
-        const root = document.getElementById("extension-root");
-        if (gameState?.gameStatus === "PLAYING" || OVERRIDE_MOUSE_PASSTHROUGH) {
-            root.classList.add("mouse-passthrough");
-        } else {
-            root.classList.remove("mouse-passthrough");
-        }
     }, [gameState]);
     return (
         <WebSocketContext.Provider value={webSocketState}>
@@ -164,14 +156,14 @@ const ContentScriptApp = () => {
                                 </Modal>
                             )}
 
-                            {webSocketState.isConnected && (gameState && !gameState?.error) && gameState?.gameStatus === "ENDED" && (
+                            {webSocketState.isConnected && (gameState && !gameState?.error) && (gameState?.gameStatus === "ENDED" 
+                                || gameState?.gameStatus === "COUNTDOWN") && (
                                 <Modal>
                                     <LobbyDialog />
                                 </Modal>
                             )} 
 
-                            {webSocketState.isConnected && (gameState && !gameState?.error) && 
-                            (gameState?.gameStatus === "COUNTDOWN" || gameState?.gameStatus === "PLAYING") && (
+                            {webSocketState.isConnected && (gameState && !gameState?.error) && gameState?.gameStatus === "PLAYING" && (
                                 <GameplayOverlay />
                             )} 
                         </>

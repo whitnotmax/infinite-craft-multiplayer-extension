@@ -6,9 +6,14 @@ function gameLoop(sockets, game) {
     if (game.timer > 0) {
         setTimeout((() => gameLoop(sockets, game)), 1000);
     } else {
-        if (game.gameStatus !== "ENDED") {
+        if (game.gameStatus === "COUNTDOWN") {
+            game.gameStatus = "PLAYING";
+            game.timer = 60;
+            setTimeout((() => gameLoop(sockets, game)), 1000);
+        } else if (game.gameStatus !== "ENDED") {
             endGame(game);
         }
+        
     }
 
     updateStateForAll(sockets, game);
@@ -21,8 +26,8 @@ function startGameHandler(socket, games, data, sockets) {
     const player = findPlayerWithID(game, senderID);
 
     if (player?.isHost) {
-        game.gameStatus = "PLAYING";
-        game.timer = 10;
+        game.gameStatus = "COUNTDOWN";
+        game.timer = 3;
         // HACK lol
         game.timer++;
         gameLoop(sockets, game);

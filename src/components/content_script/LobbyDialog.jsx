@@ -73,7 +73,14 @@ const LobbyDialog = () => {
                         
             </span>
 
-            
+            {gameState?.gameStatus === "COUNTDOWN" && (
+                <Modal>
+                    <div id="lobby-countdown-container">
+                        <h1>{gameState?.timer}</h1>
+                    </div>
+                </Modal>
+            )}
+
             {gameState?.winner && (
                 <Modal>
                     <EndDialog />
