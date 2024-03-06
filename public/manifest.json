@@ -5,6 +5,7 @@
   "description": "Multiplayer functionality for the online game Infinite Craft",
   "permissions": ["activeTab", "tabs", "storage", "*://*/*"],
   "persistent": false,
+  "options_page": "options.html",
   "browser_action": {
     "default_popup": "index.html"
   },

@@ -91,6 +91,9 @@ module.exports = {
       patterns: [
         { from: "./public/manifest.json", to: "manifest.json" },
         { from: "./public/icons", to: "icons" },
+        { from: "./public/options.html", to: "options.html" },
+        { from: "./public/options.js", to: "options.js" },
+
       ],
     }),
   ],

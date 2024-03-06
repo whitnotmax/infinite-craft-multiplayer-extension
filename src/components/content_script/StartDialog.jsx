@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
+import useLocalStorageValue from "../hooks/useLocalStorageValue.js";
 import Modal from "./Modal.jsx";
 import "./StartDialog.css";
 import "../common/buttons.css";
@@ -6,6 +7,8 @@ import { WebSocketContext, GameStateContext } from "./ContentScriptApp.jsx";
 const StartDialog = () => {
     const webSocket = useContext(WebSocketContext);
     const gameState = useContext(GameStateContext);
+    const [serverURL, setServerURL] = useLocalStorageValue("server_URL");
+
     const inputRef = useRef();
 
     const onKeyDown = (e) => {
@@ -17,7 +20,7 @@ const StartDialog = () => {
     }, []);
 
     const onCreateGameClick = () => {
-        fetch("http://localhost:8080/new-game", {
+        fetch(`http://${serverURL || "localhost"}:8080/new-game`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

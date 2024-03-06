@@ -12,14 +12,15 @@ const WEBSOCKET_NORMAL_CLOSE = 1000;
 
 export const WebSocketContext = createContext();
 export const GameStateContext = createContext();
-const webSocket = new WebSocket("ws://localhost:8080");
 
 
 const ContentScriptApp = () => {
     const [savedCrafts, setSavedCrafts] = useLocalStorageValue("saved_crafts");
     const [isMultiplayerMode, setIsMultiplayerMode] = useLocalStorageValue("is_multiplayer");
-
+    const [serverURL, setServerURL] = useLocalStorageValue("server_URL");
     const OVERRIDE_MOUSE_PASSTHROUGH = false;
+    
+    const webSocket = new WebSocket(`ws://${serverURL || "localhost"}:8080`);
 
     const [webSocketState, setWebSocketState] = useState({
         ws: webSocket,
@@ -56,6 +57,8 @@ const ContentScriptApp = () => {
     }, []);
 
     // set up connection to websocket server
+
+    
     useEffect(() => {
         setWebSocketState(prevData => ({
             ...prevData,
@@ -102,7 +105,7 @@ const ContentScriptApp = () => {
     }, []);
 
     useEffect(() => {
-        if (webSocketState.error != null) {
+        if (webSocketState.error != null && isMultiplayerMode) {
             alert(`An error occurred and Multiplayer Mode cannot continue${webSocketState.error === "" ? "." : ": " + webSocketState.error}`);
             window.location.reload();
         }
