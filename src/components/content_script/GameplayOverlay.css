@@ -11,5 +11,49 @@
     align-items: center;
     border-radius: 2px;
     pointer-events: all;
+    font-size: x-large;
 }
 
+#gameplay-opponent-word-list-area { 
+    position: absolute;
+    top: 20%;
+    left: 0.5%;
+    pointer-events: all;
+
+}
+#gameplay-opponent-word-list {
+    width: 300px;
+    height: 475px;
+    border: 3px solid black;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 2px;
+    overflow-y: scroll;
+    pointer-events: all;
+
+
+}
+
+#gameplay-opponent-label {
+   text-align: center; 
+   top: 20%;
+   left: 0.5%;
+}
+
+.gameplay-opponent-word-list-item:nth-child(even) {
+    background-color: #dedede;
+}
+
+.gameplay-opponent-word-list-item:nth-child(odd) {
+    background-color: #e9e9e9;
+}
+
+.gameplay-opponent-word-list-item {
+    height: 8%;
+    font-size: x-large;
+}
+
+.gameplay-opponent-word-list-item-spacer {
+    width: 20%;
+    display: block;
+}

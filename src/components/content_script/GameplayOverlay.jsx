@@ -3,9 +3,29 @@ import { WebSocketContext, GameStateContext } from "./ContentScriptApp.jsx";
 import "./GameplayOverlay.css";
 
 const DATA_LOCALSTORAGE_KEY = 'infinite-craft-data';
-const DEFAULT_DATA = '{"elements":[{"text":"Water","emoji":"💧","discovered":false},{"text":"Fire","emoji":"🔥","discovered":false},{"text":"Wind","emoji":"🌬️","discovered":false},{"text":"Earth","emoji":"🌍","discovered":false}]}'
 
 const GameplayOverlay = () => {
+    const opponentWords = [
+        {"emoji": "💩", "word": "Test"},
+        {"emoji": "💩", "word": "Test"},
+        {"emoji": "💩", "word": "Test"},
+        {"emoji": "💩", "word": "Test"},
+        {"emoji": "💩", "word": "Test"},
+        {"emoji": "💩", "word": "Test"},
+        {"emoji": "💩", "word": "Test"},
+        {"emoji": "💩", "word": "Test"},
+        {"emoji": "💩", "word": "Test"},
+        {"emoji": "💩", "word": "Test"},
+        {"emoji": "💩", "word": "Test"},
+        {"emoji": "💩", "word": "Test"},
+        {"emoji": "💩", "word": "Test"},
+        {"emoji": "💩", "word": "Test"},
+        {"emoji": "💩", "word": "Test"},
+        {"emoji": "💩", "word": "Test"},
+        {"emoji": "💩", "word": "Test"}
+
+    
+    ]
     let oldData = null;
     const webSocket = useContext(WebSocketContext);
     const gameState = useContext(GameStateContext);
@@ -27,6 +47,18 @@ const GameplayOverlay = () => {
     return (
         <>
             <div id="gameplay-timer">60</div>
+            <div id="gameplay-opponent-word-list-area">
+                <h2 id="gameplay-opponent-label">Your opponent:</h2>
+                    <div id="gameplay-opponent-word-list">
+                        {opponentWords.map(word => (
+                            <div className="gameplay-opponent-word-list-item">
+                                <span>
+                                {word.emoji}           {word.word}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+            </div>
         </>
     )
 }
