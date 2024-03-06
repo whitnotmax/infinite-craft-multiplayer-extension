@@ -1,13 +1,16 @@
-const { createPlayer, sendData, updateStateForAll, findPlayerWithID, findGameWithPlayer } = require('../../utils/gameUtils');
+const { updateStateForAll, findPlayerWithID, findGameWithPlayer, endGame } = require('../../utils/gameUtils');
 const { keyFromValue } = require("../../utils/utils");
 
 function gameLoop(sockets, game) {
+    game.timer--;
     if (game.timer > 0) {
         setTimeout((() => gameLoop(sockets, game)), 1000);
-        game.timer--;
     } else {
-        game.gameStatus = "ENDED";
+        if (game.gameStatus !== "ENDED") {
+            endGame(game);
+        }
     }
+
     updateStateForAll(sockets, game);
 
 }
@@ -19,7 +22,9 @@ function startGameHandler(socket, games, data, sockets) {
 
     if (player?.isHost) {
         game.gameStatus = "PLAYING";
-        game.timer = 100000;
+        game.timer = 10;
+        // HACK lol
+        game.timer++;
         gameLoop(sockets, game);
         
     }

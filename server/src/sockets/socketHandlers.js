@@ -1,5 +1,5 @@
 const ws = require('ws');
-const { updateStateForAll } = require('../utils/gameUtils');
+const { updateStateForAll, endGame } = require('../utils/gameUtils');
 const joinGameHandler = require('./message_handlers/joinGameHandler');
 const startGameHandler = require('./message_handlers/startGameHandler');
 const updateWordsHandler = require('./message_handlers/updateWordsHandler');
@@ -32,8 +32,7 @@ function closeHandler(socket, games) {
                 delete games[games.indexOf(game)];
             } else {
                 if (game.gameStatus !== "ENDED") {
-                    game.gameStatus = "ENDED";
-                    game.winner = game.players[0].playerID;
+                    endGame(game);
                 }
                 if (player.isHost) {
                     game.players[0].isHost = true;

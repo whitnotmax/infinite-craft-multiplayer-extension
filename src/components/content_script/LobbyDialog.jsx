@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { GameStateContext, WebSocketContext } from "./ContentScriptApp.jsx";
+import EndDialog from "./EndDialog.jsx";
 import Modal from "./Modal.jsx";
 import "./LobbyDialog.css";
 import "../common/buttons.css";
@@ -71,6 +72,12 @@ const LobbyDialog = () => {
                 </div>
                         
             </span>
+
+            {gameState?.winner && (
+                <Modal>
+                    <EndDialog />
+                </Modal>
+            )}
         </>
 
     )

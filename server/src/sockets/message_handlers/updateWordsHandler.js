@@ -6,7 +6,10 @@ function updateWordsHandler(socket, games, data, sockets) {
     const game = findGameWithPlayer(games, senderID);
     const player = findPlayerWithID(game, senderID);
 
-    player.words = JSON.parse(data.details.wordsList);
+    player.words = JSON.parse(data.details.wordsList).elements;
+    
+    // random thing included in the localstorage value
+    delete player.words.darkMode;
 
     updateStateForAll(sockets, game);
 

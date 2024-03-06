@@ -69,11 +69,36 @@ function findGameWithPlayer(games, id) {
     }
 }
 
+function endGame(game) {
+    game.gameStatus = "ENDED";
+    game.timer = 0;
+    let winner = "TIE";
+
+    if (game.players.length === 1) {
+        winner = game.players[0].playerID;
+        game.messages.push(`${game.players[0].name} has won the game!`)
+    } else {
+        if (game.players[0].words.length > game.players[1].words.length) {
+            winner = game.players[0].playerID;
+            game.messages.push(`${game.players[0].name} has won the game!`)
+
+        } else if (game.players[1].words.length > game.players[0].words.length) {
+            winner = game.players[1].playerID;
+            game.messages.push(`${game.players[1].name} has won the game!`)
+        } else {
+            game.messages.push("It was a tie!")
+        }
+    }
+
+    game.winner = winner;
+}
+
 module.exports = {
     createRoom,
     createPlayer,
     sendData,
     updateStateForAll,
     findPlayerWithID,
-    findGameWithPlayer
+    findGameWithPlayer,
+    endGame
 };

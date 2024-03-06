@@ -118,7 +118,10 @@ const ContentScriptApp = () => {
         }
 
         if (isMultiplayerMode) {
-            localStorage[DATA_LOCALSTORAGE_KEY] = DEFAULT_DATA;
+            if (localStorage[DATA_LOCALSTORAGE_KEY] != DEFAULT_DATA) {
+                localStorage[DATA_LOCALSTORAGE_KEY] = DEFAULT_DATA;
+                window.location.reload();
+            }
         } else {
             localStorage[DATA_LOCALSTORAGE_KEY] = savedCrafts;
             setInterval(checkForChanges, 100);
