@@ -1,7 +1,8 @@
 const ws = require('ws');
 const { updateStateForAll } = require('../utils/gameUtils');
 const joinGameHandler = require('./message_handlers/joinGameHandler');
-
+const startGameHandler = require('./message_handlers/startGameHandler');
+const updateWordsHandler = require('./message_handlers/updateWordsHandler');
 const sockets = {};
 
 function connectionHandler(socket, games) {
@@ -10,6 +11,10 @@ function connectionHandler(socket, games) {
         data = JSON.parse(data);
         if (data.reason === "JOIN_GAME") {
             joinGameHandler(socket, games, data, sockets);
+        } else if (data.reason === "START_GAME") {
+            startGameHandler(socket, games, data, sockets);
+        } else if (data.reason === "UPDATE_WORDS") {
+            updateWordsHandler(socket, games, data, sockets);
         }
     });
 }
@@ -28,6 +33,10 @@ function closeHandler(socket, games) {
             } else {
                 if (player.isHost) {
                     game.players[0].isHost = true;
+                    if (game.gameStatus !== "ENDED") {
+                        game.gameStatus = "ENDED";
+                        game.winner = game.players[0].playerID;
+                    }
                     game.messages.push(`${game.players[0].name} is now the host.`);
                 }
                 updateStateForAll(sockets, game);

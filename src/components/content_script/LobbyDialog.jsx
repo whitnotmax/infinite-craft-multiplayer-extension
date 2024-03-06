@@ -11,13 +11,17 @@ const LobbyDialog = () => {
         webSocket.ws.close();
     }
 
+    const onStartButtonClick = () => {
+        webSocket.sendData("START_GAME");
+    }
+
     const canStartGame = () => {
         const match = gameState?.players.filter(player => player.playerID === gameState?.you);
 
         if (!match)
             return false;
 
-        return match[0].isHost; 
+        return match[0].isHost && gameState?.gameStatus === "ENDED" && gameState?.players.length === 2; 
     }
 
     return (
@@ -52,7 +56,7 @@ const LobbyDialog = () => {
                 </div>
 
                 <div id="actions-list">
-                    <button className="confirm-button lobby-action-button" disabled={!canStartGame()}>Start game</button>
+                    <button className="confirm-button lobby-action-button" disabled={!canStartGame()} onClick={onStartButtonClick}>Start game</button>
                     <button className="confirm-button lobby-action-button" onClick={onLeaveButtonClick}>Leave</button>
                 </div>
             </span>

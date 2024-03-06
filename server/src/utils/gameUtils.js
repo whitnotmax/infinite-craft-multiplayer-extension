@@ -5,6 +5,9 @@ function createRoom(id) {
         "roomID": id,
         players: [],
         messages: [],
+        gameStatus: "ENDED",
+        winner: null,
+        timer: 0,
         _internalState: {
             totalConnected: 0
         }
@@ -34,10 +37,7 @@ function sendData(socket, reason, details, target) {
         "details": details
     }
 
-    console.log("UHG");
-    console.log(response.details);
     if (response.details._internalState != undefined) {
-        console.log('removing internal state');
         delete response.details._internalState;
     }
 
@@ -52,9 +52,28 @@ function updateStateForAll(sockets, game) {
     });
 }
 
+function findPlayerWithID(game, id) {
+    const match = game?.players.filter(player => player.playerID === id);
+
+    if (match) {
+        return match[0];
+    }
+}
+
+function findGameWithPlayer(games, id) {
+    for (const game of games) {
+        const match = game?.players.filter(player => player.playerID === id);
+        if (match) {
+            return game;
+        }
+    }
+}
+
 module.exports = {
     createRoom,
     createPlayer,
     sendData,
-    updateStateForAll
+    updateStateForAll,
+    findPlayerWithID,
+    findGameWithPlayer
 };

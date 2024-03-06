@@ -3,6 +3,7 @@ import useLocalStorageValue from "../hooks/useLocalStorageValue";
 import Modal from "./Modal.jsx";
 import StartDialog from "./StartDialog.jsx";
 import LobbyDialog from "./LobbyDialog.jsx";
+import GameplayOverlay from "./GameplayOverlay.jsx";
 
 const DEFAULT_DATA = '{"elements":[{"text":"Water","emoji":"💧","discovered":false},{"text":"Fire","emoji":"🔥","discovered":false},{"text":"Wind","emoji":"🌬️","discovered":false},{"text":"Earth","emoji":"🌍","discovered":false}]}'
 const DATA_LOCALSTORAGE_KEY = 'infinite-craft-data';
@@ -142,11 +143,16 @@ const ContentScriptApp = () => {
                                 </Modal>
                             )}
 
-                            {webSocketState.isConnected && (gameState && !gameState?.error) && (
+                            {webSocketState.isConnected && (gameState && !gameState?.error) && gameState?.gameStatus === "ENDED" && (
                                 <Modal>
                                     <LobbyDialog />
                                 </Modal>
-                            )}  
+                            )} 
+
+                            {webSocketState.isConnected && (gameState && !gameState?.error) && 
+                            (gameState?.gameStatus === "COUNTDOWN" || gameState?.gameStatus === "PLAYING") && (
+                                <GameplayOverlay />
+                            )} 
                         </>
                     )}
                 </div>

@@ -1,0 +1,8 @@
+#gameplay-timer {
+    width: 5%;
+    height: 5%;
+    position: absolute;
+    left: 50%;
+    background-color: red;
+}
+
