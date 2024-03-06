@@ -2,4 +2,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100%;
+    flex-direction: column;
+}
+
+.end-dialog-button {
+    height: 15%;
+    width: 15%;
 }

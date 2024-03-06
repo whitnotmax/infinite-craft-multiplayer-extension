@@ -73,11 +73,13 @@ const LobbyDialog = () => {
                         
             </span>
 
+            
             {gameState?.winner && (
                 <Modal>
                     <EndDialog />
                 </Modal>
             )}
+            
         </>
 
     )
