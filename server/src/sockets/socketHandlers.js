@@ -31,12 +31,12 @@ function closeHandler(socket, games) {
             if (game.players.length === 0) {
                 delete games[games.indexOf(game)];
             } else {
+                if (game.gameStatus !== "ENDED") {
+                    game.gameStatus = "ENDED";
+                    game.winner = game.players[0].playerID;
+                }
                 if (player.isHost) {
                     game.players[0].isHost = true;
-                    if (game.gameStatus !== "ENDED") {
-                        game.gameStatus = "ENDED";
-                        game.winner = game.players[0].playerID;
-                    }
                     game.messages.push(`${game.players[0].name} is now the host.`);
                 }
                 updateStateForAll(sockets, game);

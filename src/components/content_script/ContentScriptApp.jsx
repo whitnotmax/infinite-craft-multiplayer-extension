@@ -4,6 +4,7 @@ import Modal from "./Modal.jsx";
 import StartDialog from "./StartDialog.jsx";
 import LobbyDialog from "./LobbyDialog.jsx";
 import GameplayOverlay from "./GameplayOverlay.jsx";
+import "./ContentScriptApp.css";
 
 const DEFAULT_DATA = '{"elements":[{"text":"Water","emoji":"💧","discovered":false},{"text":"Fire","emoji":"🔥","discovered":false},{"text":"Wind","emoji":"🌬️","discovered":false},{"text":"Earth","emoji":"🌍","discovered":false}]}'
 const DATA_LOCALSTORAGE_KEY = 'infinite-craft-data';
@@ -17,6 +18,8 @@ const webSocket = new WebSocket("ws://localhost:8080");
 const ContentScriptApp = () => {
     const [savedCrafts, setSavedCrafts] = useLocalStorageValue("saved_crafts");
     const [isMultiplayerMode, setIsMultiplayerMode] = useLocalStorageValue("is_multiplayer");
+
+    const OVERRIDE_MOUSE_PASSTHROUGH = false;
 
     const [webSocketState, setWebSocketState] = useState({
         ws: webSocket,
@@ -41,6 +44,7 @@ const ContentScriptApp = () => {
         }
     }
     
+    // set up listeners for messages from other parts of the extension
     useEffect(() => {
         console.log("Content script init");
         chrome.runtime.onMessage.addListener((data, sender) => {
@@ -49,12 +53,9 @@ const ContentScriptApp = () => {
                 window.location.reload();
             }
         });
-
-        
-
-
     }, []);
 
+    // set up connection to websocket server
     useEffect(() => {
         setWebSocketState(prevData => ({
             ...prevData,
@@ -101,6 +102,17 @@ const ContentScriptApp = () => {
     }, []);
 
     useEffect(() => {
+        if (webSocketState.error != null) {
+            alert(`An error occurred and Multiplayer Mode cannot continue${webSocketState.error === "" ? "." : ": " + webSocketState.error}`);
+            window.location.reload();
+        }
+    }, [webSocketState]);
+
+    //
+    // are we in single-player mode? --> sit in the background and constantly save the changes to the found words
+    // are we in multiplayer mode? --> set the words to what they need to be
+    // 
+    useEffect(() => {
         if (isMultiplayerMode == undefined) {
             return;
         }
@@ -113,22 +125,28 @@ const ContentScriptApp = () => {
         }
     }, [isMultiplayerMode, savedCrafts]);
 
-    useEffect(() => {
-        if (webSocketState.error != null) {
-            alert(`An error occurred and Multiplayer Mode cannot continue${webSocketState.error === "" ? "." : ": " + webSocketState.error}`);
-            window.location.reload();
-        }
-    }, [webSocketState]);
 
+    // various things that need to listen to the game state
     useEffect(() => {
+        // TODO gameState.error is set when the user did something wrong, like trying to join a room that doesn't exist
+        // this creates an alert whenever it happens but it should probably be somewhere else
         if (gameState?.error) {
             alert(gameState?.error);
+        }
+
+        // HACK: during gameplay, we need the root-level element to let mouse input through to lower layers
+        // but it is not managed by react!
+        const root = document.getElementById("extension-root");
+        if (gameState?.gameStatus === "PLAYING" || OVERRIDE_MOUSE_PASSTHROUGH) {
+            root.classList.add("mouse-passthrough");
+        } else {
+            root.classList.remove("mouse-passthrough");
         }
     }, [gameState]);
     return (
         <WebSocketContext.Provider value={webSocketState}>
             <GameStateContext.Provider value={gameState}>
-                <div className="extension-content">
+                <div>
                     {isMultiplayerMode && !webSocketState?.error && (
                         <>
                             {!webSocketState.isConnected && (

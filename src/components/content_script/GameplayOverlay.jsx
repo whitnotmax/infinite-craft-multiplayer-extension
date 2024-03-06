@@ -1,5 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { WebSocketContext, GameStateContext } from "./ContentScriptApp.jsx";
+import "./GameplayOverlay.css";
+
 const DATA_LOCALSTORAGE_KEY = 'infinite-craft-data';
 const DEFAULT_DATA = '{"elements":[{"text":"Water","emoji":"💧","discovered":false},{"text":"Fire","emoji":"🔥","discovered":false},{"text":"Wind","emoji":"🌬️","discovered":false},{"text":"Earth","emoji":"🌍","discovered":false}]}'
 

@@ -1,8 +1,15 @@
 #gameplay-timer {
-    width: 5%;
-    height: 5%;
+    width: 70px;
+    height: 70px;
     position: absolute;
     left: 50%;
-    background-color: red;
+    top: 1%;
+    border: 2px solid black;
+    background-color: #e9e9e9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 2px;
+    pointer-events: all;
 }
 

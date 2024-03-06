@@ -7,6 +7,8 @@
     bottom: 0;
     position: fixed;
     z-index: 9998;
+    pointer-events: all;
+
 }
 .overlay {
     background: rgba(49,49,49,0.8);
@@ -23,5 +25,7 @@
     width: 75%;
     height: 60%;
     z-index: 9999;  
+    pointer-events: all;
+
 }
 
