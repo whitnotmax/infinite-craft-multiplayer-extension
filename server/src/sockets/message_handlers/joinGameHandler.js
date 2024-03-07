@@ -28,7 +28,7 @@ function joinGameHandler(socket, games, data, sockets) {
         const id = v4();
         const newPlayer = createPlayer(`Player${++game._internalState.totalConnected}`, game.players.length === 0);
         game.players.push(newPlayer);
-        console.log(`Added player ${player.name} to room ${game.roomID}`);
+        console.log(`Added player ${newPlayer.name} to room ${game.roomID}`);
         sockets[newPlayer.playerID] = socket;
         sendData(socket, "UPDATE_GAME_STATE", {
             ...game
