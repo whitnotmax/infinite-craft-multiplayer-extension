@@ -13,26 +13,20 @@ const WEBSOCKET_NORMAL_CLOSE = 1000;
 export const WebSocketContext = createContext();
 export const GameStateContext = createContext();
 
-
 const ContentScriptApp = () => {
     const [savedCrafts, setSavedCrafts] = useLocalStorageValue("saved_crafts");
     const [isMultiplayerMode, setIsMultiplayerMode] = useLocalStorageValue("is_multiplayer");
-    const [serverURL, setServerURL] = useLocalStorageValue("server_URL");
+    const [serverURL, setServerURL] = useLocalStorageValue("server_URL", "localhost");
     const OVERRIDE_MOUSE_PASSTHROUGH = false;
     
-    const webSocket = new WebSocket(`ws://${serverURL || "localhost"}:8080`);
+    const location = serverURL;
+    const wsProtocol = location !== "localhost" && location !== "127.0.0.1" ? "wss" : "ws";
+    const httpProtocol = location !== "localhost" && location !== "127.0.0.1" ? "https" : "http";
+    const port = wsProtocol === "wss" ? 443 : 80;
 
-    const [webSocketState, setWebSocketState] = useState({
-        ws: webSocket,
-        isConnected: false,
-        error: null,
-        sendData: (reason, details) => {
-            console.log("sending data");
-            console.log({"reason": reason, "details": details});
-            webSocket.send(JSON.stringify({"reason": reason, "details": details}));
-        }
-    });
+    
 
+    const [webSocketState, setWebSocketState] = useState();
     const [gameState, setGameState] = useState();
     
     let oldData = null;
@@ -58,13 +52,28 @@ const ContentScriptApp = () => {
 
     // set up connection to websocket server
 
+    useEffect(() => {
+        if (serverURL) {
+            const webSocket = new WebSocket(`${wsProtocol}://${location}:${port}`)
+            setWebSocketState({
+                ws: webSocket,
+                isConnected: webSocket.readyState === WebSocket.OPEN,
+                error: null,
+                sendData: (reason, details) => {
+                    console.log("sending data");
+                    console.log({"reason": reason, "details": details});
+                    webSocket.send(JSON.stringify({"reason": reason, "details": details}));
+                },
+                "location": location,
+                "wsProtocol": wsProtocol,
+                "httpProtocol": httpProtocol,
+                "port": port
+            });
+        }
+    }, [serverURL])
     
     useEffect(() => {
-        setWebSocketState(prevData => ({
-            ...prevData,
-            isConnected: webSocketState.ws.readyState
-        }));
-        webSocket.addEventListener("open", () => {
+        webSocketState?.ws?.addEventListener("open", () => {
             console.log("Connection ready");
             setWebSocketState(prevData => ({
                 ...prevData,
@@ -72,7 +81,7 @@ const ContentScriptApp = () => {
             }));
         });
     
-        webSocket.addEventListener("error", (err) => {
+        webSocketState?.ws?.addEventListener("error", (err) => {
             setWebSocketState(prevData => ({
                 ...prevData,
                 isConnected: false,
@@ -80,7 +89,7 @@ const ContentScriptApp = () => {
             }));
         });
 
-        webSocket.addEventListener("close", e => {
+        webSocketState?.ws?.addEventListener("close", e => {
             if (e.wasClean) {
                 window.location.reload();
             } else {
@@ -93,7 +102,7 @@ const ContentScriptApp = () => {
             
         });
     
-        webSocket.addEventListener("message", e => {
+        webSocketState?.ws?.addEventListener("message", e => {
             const data = JSON.parse(e.data);
             console.log(data);
             if (data.reason === "UPDATE_GAME_STATE") {
@@ -102,10 +111,10 @@ const ContentScriptApp = () => {
                 console.log(data.details);
             }
         });
-    }, []);
+    }, [webSocketState]);
 
     useEffect(() => {
-        if (webSocketState.error != null && isMultiplayerMode) {
+        if (webSocketState?.error != null && isMultiplayerMode) {
             alert(`An error occurred and Multiplayer Mode cannot continue${webSocketState.error === "" ? "." : ": " + webSocketState.error}`);
             window.location.reload();
         }
@@ -145,7 +154,7 @@ const ContentScriptApp = () => {
         <WebSocketContext.Provider value={webSocketState}>
             <GameStateContext.Provider value={gameState}>
                 <div>
-                    {isMultiplayerMode && !webSocketState?.error && (
+                    {isMultiplayerMode && webSocketState && !webSocketState?.error && (
                         <>
                             {!webSocketState.isConnected && (
                                 <Modal>

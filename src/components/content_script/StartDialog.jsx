@@ -20,7 +20,8 @@ const StartDialog = () => {
     }, []);
 
     const onCreateGameClick = () => {
-        fetch(`http://${serverURL || "localhost"}:8080/new-game`, {
+        console.log(`${webSocket.httpProtocol}://${webSocket.location}:${webSocket.port}/new-game`);
+        fetch(`${webSocket.httpProtocol}://${webSocket.location}:${webSocket.port}/new-game`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

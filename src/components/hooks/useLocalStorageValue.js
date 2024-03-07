@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 
-const useLocalStorageValue = (key) => {
+const useLocalStorageValue = (key, defaultValue = undefined) => {
     const [value, setValue] = useState();
 
 
 
     const updateValue = () => {
         chrome.storage.local.get((items) => {
-            setValue(items[key]); 
+            if (items[key] != null && items[key] != undefined) {
+                setValue(items[key]); 
+            } else {
+                setValue(defaultValue);
+            }
         });
     }
     useEffect(() => {

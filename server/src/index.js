@@ -30,7 +30,7 @@ wsServer.on('connection', socket => {
 });
 
     
-const server = app.listen(8080, () => {
+const server = app.listen(80, () => {
     console.log("Ready");
 });
 
