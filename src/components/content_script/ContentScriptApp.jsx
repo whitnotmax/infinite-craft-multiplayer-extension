@@ -15,7 +15,7 @@ export const GameStateContext = createContext();
 
 const ContentScriptApp = () => {
     const [savedCrafts, setSavedCrafts] = useLocalStorageValue("saved_crafts");
-    const [isMultiplayerMode, setIsMultiplayerMode] = useLocalStorageValue("is_multiplayer");
+    const [isMultiplayerMode, setIsMultiplayerMode] = useLocalStorageValue("is_multiplayer", false);
     const [serverURL, setServerURL] = useLocalStorageValue("server_URL", "localhost");
     const OVERRIDE_MOUSE_PASSTHROUGH = false;
     
