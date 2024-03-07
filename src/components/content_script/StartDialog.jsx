@@ -15,12 +15,8 @@ const StartDialog = () => {
         e.stopPropagation();
     }
 
-    useEffect(() => {
-        console.log(webSocket);
-    }, []);
 
     const onCreateGameClick = () => {
-        console.log(`${webSocket.httpProtocol}://${webSocket.location}:${webSocket.port}/new-game`);
         fetch(`${webSocket.httpProtocol}://${webSocket.location}:${webSocket.port}/new-game`, {
             method: "POST",
             headers: {
@@ -31,7 +27,6 @@ const StartDialog = () => {
         }));
     }
     const onJoinGameClick = () => {
-        console.log(parseInt(inputRef.current.value));
         webSocket.sendData("JOIN_GAME", { id: parseInt(inputRef.current.value) });
     }
 

@@ -15,7 +15,6 @@ const GameplayOverlay = () => {
     const checkForChanges = () => {
         if (localStorage[DATA_LOCALSTORAGE_KEY] != oldData) {
             oldData = localStorage[DATA_LOCALSTORAGE_KEY];
-            console.log("list change!");
             webSocket.sendData("UPDATE_WORDS", {
                 wordsList: localStorage[DATA_LOCALSTORAGE_KEY]
             });

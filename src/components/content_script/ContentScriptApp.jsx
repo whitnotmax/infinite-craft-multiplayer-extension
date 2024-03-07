@@ -37,16 +37,13 @@ const ContentScriptApp = () => {
     const checkForChanges = () => {
         if (localStorage[DATA_LOCALSTORAGE_KEY] != oldData && localStorage[DATA_LOCALSTORAGE_KEY] != DEFAULT_DATA) {
             oldData = localStorage[DATA_LOCALSTORAGE_KEY];
-            console.log("list change!");
             setSavedCrafts(localStorage[DATA_LOCALSTORAGE_KEY]);
         }
     }
     
     // set up listeners for messages from other parts of the extension
     useEffect(() => {
-        console.log("Content script init");
         chrome.runtime.onMessage.addListener((data, sender) => {
-            console.log(data);
             if (data.message === "reload") {
                 window.location.reload();
             }
@@ -63,8 +60,6 @@ const ContentScriptApp = () => {
                 isConnected: webSocket.readyState === WebSocket.OPEN,
                 error: null,
                 sendData: (reason, details) => {
-                    console.log("sending data");
-                    console.log({"reason": reason, "details": details});
                     webSocket.send(JSON.stringify({"reason": reason, "details": details}));
                 },
                 "location": location,
@@ -77,7 +72,6 @@ const ContentScriptApp = () => {
     
     useEffect(() => {
         webSocketState?.ws?.addEventListener("open", () => {
-            console.log("Connection ready");
             setWebSocketState(prevData => ({
                 ...prevData,
                 isConnected: true
@@ -107,11 +101,9 @@ const ContentScriptApp = () => {
     
         webSocketState?.ws?.addEventListener("message", e => {
             const data = JSON.parse(e.data);
-            console.log(data);
             if (data.reason === "UPDATE_GAME_STATE") {
-                console.log("Game state update");
+                console.log("Game state update ", data.details);
                 setGameState(data.details);
-                console.log(data.details);
             }
         });
     }, [webSocketState]);
