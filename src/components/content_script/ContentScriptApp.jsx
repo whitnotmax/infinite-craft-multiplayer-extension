@@ -19,6 +19,9 @@ const ContentScriptApp = () => {
     const [serverURL, setServerURL] = useLocalStorageValue("server_URL", "localhost");
     const OVERRIDE_MOUSE_PASSTHROUGH = false;
     
+    // for security reasons, the browser won't let us use HTTP from the HTTPS website unless it is pointed to localhost
+    // use regular HTTP for testing purposes but switch over to HTTPS when we have to
+    // this also means if we are hosting an actual server, we need to have an SSL certificate set up
     const location = serverURL;
     const wsProtocol = location !== "localhost" && location !== "127.0.0.1" ? "wss" : "ws";
     const httpProtocol = location !== "localhost" && location !== "127.0.0.1" ? "https" : "http";

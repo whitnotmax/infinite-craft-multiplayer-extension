@@ -19,6 +19,7 @@ var wrapper = function (config) {
                 }
             }
         }
+        console.log(`Room ${id} was created`);
         games.push(createRoom(id));
         res.status(200).json(id);
     });

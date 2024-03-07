@@ -6,7 +6,7 @@ const updateWordsHandler = require('./message_handlers/updateWordsHandler');
 const sockets = {};
 
 function connectionHandler(socket, games) {
-    console.log("ws connected");
+    console.log("WS connected");
     socket.on("message", data => {
         data = JSON.parse(data);
         if (data.reason === "JOIN_GAME") {
@@ -29,6 +29,7 @@ function closeHandler(socket, games) {
             game.messages.push(`${player.name} has left the room.`)
             
             if (game.players.length === 0) {
+                console.log(`Removing room ${game.roomID} because all players have left`)
                 delete games[games.indexOf(game)];
             } else {
                 if (game.gameStatus !== "ENDED") {
@@ -37,11 +38,11 @@ function closeHandler(socket, games) {
                 if (player.isHost) {
                     game.players[0].isHost = true;
                     game.messages.push(`${game.players[0].name} is now the host.`);
+                    console.log(`Player ${player.name} was promoted to host in game ${game.roomID}`);
                 }
                 updateStateForAll(sockets, game);
             }
             delete sockets[player.playerID];
-            console.log(game);
         }
     })
 }

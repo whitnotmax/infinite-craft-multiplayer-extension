@@ -70,6 +70,7 @@ function findGameWithPlayer(games, id) {
 }
 
 function endGame(game) {
+    console.log(`Ending game in room ${game.roomID}`);
     game.gameStatus = "ENDED";
     game.timer = 0;
     let winner = "TIE";

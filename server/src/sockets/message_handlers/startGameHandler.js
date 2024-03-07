@@ -9,6 +9,7 @@ function gameLoop(sockets, game) {
         if (game.gameStatus === "COUNTDOWN") {
             game.gameStatus = "PLAYING";
             game.timer = 60;
+            console.log(`Game timer started in room ${game.roomID}`);
             setTimeout((() => gameLoop(sockets, game)), 1000);
         } else if (game.gameStatus !== "ENDED") {
             endGame(game);
@@ -26,6 +27,7 @@ function startGameHandler(socket, games, data, sockets) {
     const player = findPlayerWithID(game, senderID);
 
     if (player?.isHost) {
+        console.log(`Countdown started in room ${game.roomID}`);
         game.gameStatus = "COUNTDOWN";
         game.timer = 3;
         // HACK lol
