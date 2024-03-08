@@ -10,7 +10,7 @@ const PopupApp = () => {
     const tab = useCurrentTab();
     const [isMultiplayerMode, setIsMultiplayerMode] = useLocalStorageValue("is_multiplayer");
     const [contentScript, sendCommand] = useContent();
-    const isInfiniteCraft = tab?.url ==  INFINITE_CRAFT_URL;
+    const isInfiniteCraft = tab?.url.includes(INFINITE_CRAFT_URL);
     
     const handleButtonClick = () => {
         if (isInfiniteCraft) {
