@@ -8,7 +8,6 @@ import "./ContentScriptApp.css";
 
 const DEFAULT_DATA = '{"elements":[{"text":"Water","emoji":"💧","discovered":false},{"text":"Fire","emoji":"🔥","discovered":false},{"text":"Wind","emoji":"🌬️","discovered":false},{"text":"Earth","emoji":"🌍","discovered":false}]}'
 const DATA_LOCALSTORAGE_KEY = 'infinite-craft-data';
-const WEBSOCKET_NORMAL_CLOSE = 1000;
 
 export const WebSocketContext = createContext();
 export const GameStateContext = createContext();
@@ -17,7 +16,6 @@ const ContentScriptApp = () => {
     const [savedCrafts, setSavedCrafts] = useLocalStorageValue("saved_crafts");
     const [isMultiplayerMode, setIsMultiplayerMode] = useLocalStorageValue("is_multiplayer");
     const [serverURL, setServerURL] = useLocalStorageValue("server_URL", "localhost");
-    const OVERRIDE_MOUSE_PASSTHROUGH = false;
     
     // for security reasons, the browser won't let us use HTTP from the HTTPS website unless it is pointed to localhost
     // use regular HTTP for testing purposes but switch over to HTTPS when we have to
@@ -26,20 +24,10 @@ const ContentScriptApp = () => {
     const wsProtocol = location !== "localhost" && location !== "127.0.0.1" ? "wss" : "ws";
     const httpProtocol = location !== "localhost" && location !== "127.0.0.1" ? "https" : "http";
     const port = wsProtocol === "wss" ? 443 : 80;
-
     
 
     const [webSocketState, setWebSocketState] = useState();
     const [gameState, setGameState] = useState();
-    
-    let oldData = null;
-
-    const checkForChanges = () => {
-        if (localStorage[DATA_LOCALSTORAGE_KEY] != oldData && localStorage[DATA_LOCALSTORAGE_KEY] != DEFAULT_DATA) {
-            oldData = localStorage[DATA_LOCALSTORAGE_KEY];
-            setSavedCrafts(localStorage[DATA_LOCALSTORAGE_KEY]);
-        }
-    }
     
     // set up listeners for messages from other parts of the extension
     useEffect(() => {
@@ -122,17 +110,20 @@ const ContentScriptApp = () => {
     useEffect(() => {
         if (isMultiplayerMode == undefined) {
             return;
+        } else {
+            if (isMultiplayerMode) {
+                if (localStorage[DATA_LOCALSTORAGE_KEY] != DEFAULT_DATA) {
+                    setSavedCrafts(localStorage[DATA_LOCALSTORAGE_KEY]);
+                    localStorage[DATA_LOCALSTORAGE_KEY] = DEFAULT_DATA;
+                    window.location.reload();
+                }
+            } else {
+                localStorage[DATA_LOCALSTORAGE_KEY] = savedCrafts;
+                //setInterval(checkForChanges, 100);
+            }
         }
 
-        if (isMultiplayerMode) {
-            if (localStorage[DATA_LOCALSTORAGE_KEY] != DEFAULT_DATA) {
-                localStorage[DATA_LOCALSTORAGE_KEY] = DEFAULT_DATA;
-                window.location.reload();
-            }
-        } else {
-            localStorage[DATA_LOCALSTORAGE_KEY] = savedCrafts;
-            setInterval(checkForChanges, 100);
-        }
+        
     }, [isMultiplayerMode, savedCrafts]);
 
 
@@ -142,6 +133,10 @@ const ContentScriptApp = () => {
         // this creates an alert whenever it happens but it should probably be somewhere else
         if (gameState?.error) {
             alert(gameState?.error);
+        }
+
+        if (gameState?.winner) {
+            localStorage[DATA_LOCALSTORAGE_KEY] = DEFAULT_DATA;
         }
 
     }, [gameState]);
