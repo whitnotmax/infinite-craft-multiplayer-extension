@@ -28,6 +28,8 @@ function closeHandler(socket, games) {
         if (match.length > 0) {
             const player = match[0];
             console.log(`${player.name} on game ${game.roomID} has left`);
+            delete sockets[player.playerID];
+            console.log("Sockets contents ", sockets);
             game.players.splice(game.players.indexOf(player), 1);
             game.messages.push(`${player.name} has left the room.`)
             
@@ -45,7 +47,6 @@ function closeHandler(socket, games) {
                 }
                 updateStateForAll(sockets, game);
             }
-            delete sockets[player.playerID];
         }
     })
 }
