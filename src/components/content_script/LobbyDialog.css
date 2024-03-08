@@ -50,7 +50,26 @@
 
 }
 #lobby-dialog-bottom {
-    height: 33%;
+    height: 28%;
+}
+
+#lobby-dialog-chatbox-container {
+    height: 5%;
+    width: 100%;
+}
+
+#lobby-dialog-textbox {
+    width: 89%;
+    height: 5%;
+    margin-top: 1%;
+
+}
+
+#lobby-dialog-chatbox-send-button {
+    width: 10%;
+    margin-top: 1%;
+    margin-left: 0.5%;
+
 }
 
 #messages-list {
