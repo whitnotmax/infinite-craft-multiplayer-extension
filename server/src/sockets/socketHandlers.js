@@ -3,6 +3,7 @@ const { updateStateForAll, endGame } = require('../utils/gameUtils');
 const joinGameHandler = require('./message_handlers/joinGameHandler');
 const startGameHandler = require('./message_handlers/startGameHandler');
 const updateWordsHandler = require('./message_handlers/updateWordsHandler');
+const sendMessageHandler = require('./message_handlers/sendMessageHandler');
 const sockets = {};
 
 function connectionHandler(socket, games) {
@@ -15,6 +16,8 @@ function connectionHandler(socket, games) {
             startGameHandler(socket, games, data, sockets);
         } else if (data.reason === "UPDATE_WORDS") {
             updateWordsHandler(socket, games, data, sockets);
+        } else if (data.reason === "SEND_MESSAGE") {
+            sendMessageHandler(socket, games, data, sockets);
         }
     });
 }

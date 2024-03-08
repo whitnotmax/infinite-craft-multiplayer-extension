@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { GameStateContext, WebSocketContext } from "./ContentScriptApp.jsx";
 import EndDialog from "./EndDialog.jsx";
 import Modal from "./Modal.jsx";
@@ -8,12 +8,31 @@ const LobbyDialog = () => {
     const gameState = useContext(GameStateContext);
     const webSocket = useContext(WebSocketContext);
 
+    const inputRef = useRef();
+
     const onLeaveButtonClick = () => {
         webSocket.ws.close();
     }
 
     const onStartButtonClick = () => {
         webSocket.sendData("START_GAME");
+    }
+
+    const onSendMessageButtonClick = () => {
+        if (inputRef.current.value.length > 50) {
+            alert("Message is too long")
+        } else if (inputRef.current.value.trim().length < 1) {
+            alert("Message cannot be blank");
+        } else {
+            webSocket.sendData("SEND_MESSAGE", {
+                message: inputRef.current.value
+            });
+        }
+        inputRef.current.value = "";
+    }
+
+    const onTextboxKeyDown = e => {
+        e.stopPropagation();
     }
 
     const canStartGame = () => {
@@ -67,10 +86,12 @@ const LobbyDialog = () => {
                     {Array.from(gameState?.messages).reverse().map((msg) => (
                         <p className="lobby-list-item">{msg}</p>
                     ))}
+                </div> 
+            </span>
 
-                    
-                </div>
-                        
+            <span id="lobby-dialog-chatbox-container">
+                <input type="text" id="lobby-dialog-textbox" onKeyDown={onTextboxKeyDown} placeholder={"Send a message..."} ref={inputRef}></input>
+                <button id="lobby-dialog-chatbox-send-button" className="confirm-button" onClick={onSendMessageButtonClick}>Send</button>
             </span>
 
             {gameState?.gameStatus === "COUNTDOWN" && (

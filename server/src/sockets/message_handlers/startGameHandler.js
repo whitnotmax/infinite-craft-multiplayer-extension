@@ -8,7 +8,7 @@ function gameLoop(sockets, game) {
     } else {
         if (game.gameStatus === "COUNTDOWN") {
             game.gameStatus = "PLAYING";
-            game.timer = 60;
+            game.timer = 10;
             console.log(`Game timer started in room ${game.roomID}`);
             setTimeout((() => gameLoop(sockets, game)), 1000);
         } else if (game.gameStatus !== "ENDED") {
