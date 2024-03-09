@@ -1,52 +1,26 @@
-# create-react-chrome-extension
+# Infinite Craft Multiplayer Extension
 
-**I removed a bunch of stuff like client side routing that I didn't want, and configured content scripts to also be compiled by webpack in order to inject React components into a webpage (see src/content.js) for a project I may or may not end up actually finishing :)**
+A browser extension that adds an interactive multiplayer racing mode to the browser game Infinite Craft.
 
-create-react-chrome-extension is a template for building Chrome and Firefox extensions using React and state-of-the-art settings. This project aims to provide a solid starting point for developers looking to create browser extensions with modern web technologies.
+![Screenshot](https://i.imgur.com/aIOKf3i.png)
+![Screenshot](https://i.imgur.com/m6vmqnC.png)
 
-Consider giving it a ⭐️ if you like it to show your support!
+The browser extension introduces a new Multiplayer mode that can be toggled through the extension popup window. Playing the game normally is still possible, since the extension preserves the progress that you made before enabling multiplayer mode, and restores it once you return to singleplayer mode.
 
-## Features
+![Screenshot](https://i.imgur.com/71TuTUo.png)
 
-- **React**: Build your extension's UI with the popular JavaScript library.
-- **State-of-the-art settings**: The template is configured with the latest best practices in mind.
-- **Support for Chrome and Firefox**: Develop extensions that are compatible with two of the most widely used web browsers.
+## Running the extension
+The extension is compiled using Webpack, and will be built into the `dist` directory. Build using `yarn build`, or use `yarn dev` to automatically build when the code changes.
 
-## Getting Started
+To install the extension in the browser, enable developer mode, select "Load unpacked extension," and select the dist folder. 
 
-To use this template, clone the repository to your local machine:
+**For more info, see the README of [this repo](https://github.com/whitnotmax/create-react-chrome-extension).**
 
-```bash
-git clone https://github.com/snwfdhmp/create-react-chrome-extension.git
-```
+You can change the URL of the server that the extension connects to by right-clicking the extension icon and accessing the options page (by default, it tries to connect to localhost).
 
-Then, navigate into the project directory and install the dependencies:
+## Running the server
+The server code is located in the `server` directory. Run `yarn start-server` to automatically reload when the server code changes. 
 
-```bash
-cd create-react-chrome-extension
-yarn install
-```
+If you have set up an SSL certificate for your server using certbot or a similar tool, you can put the path to the private key file into the `PRIVATE_KEY` environment variable, the path to the public key in the `CERT` environment variable, and the path to the certificate chain file into the `CA` environment variable. If these files are present, the server will start up an HTTPS server.
 
-Then you can build the app:
-
-```bash
-yarn build
-```
-
-Then install the unpacked extension from `dist` folder in Chrome ([tutorial](https://github.com/web-scrobbler/web-scrobbler/wiki/Install-an-unpacked-extension)) or Firefox ([tutorial](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Your_first_WebExtension#installing)).
-
-## Development
-
-For live reload development, use
-
-```bash
-yarn dev
-```
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a pull request.
-
-## License
-
-This project is open source and available under the [MIT License](LICENSE).
+**If you want to host a server somewhere other than `localhost`, you must have an SSL certificate set up.** Otherwise, the browser will refuse to connect. The Infinite Craft game is hosted on an HTTPS website, so Chrome will not allow extensions to connect to insecure URLs. 
