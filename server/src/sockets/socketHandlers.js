@@ -29,7 +29,6 @@ function closeHandler(socket, games) {
             const player = match[0];
             console.log(`${player.name} on game ${game.roomID} has left`);
             delete sockets[player.playerID];
-            console.log("Sockets contents ", sockets);
             game.players.splice(game.players.indexOf(player), 1);
             game.messages.push(`${player.name} has left the room.`)
             
