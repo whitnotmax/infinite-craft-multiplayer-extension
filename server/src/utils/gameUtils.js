@@ -53,16 +53,16 @@ function updateStateForAll(sockets, game) {
 }
 
 function findPlayerWithID(game, id) {
-    const match = game?.players.filter(player => player.playerID === id);
+    const match = game?.players.find(player => player.playerID === id);
 
     if (match) {
-        return match[0];
+        return match;
     }
 }
 
 function findGameWithPlayer(games, id) {
     for (const game of games) {
-        const match = game?.players.filter(player => player.playerID === id);
+        const match = game?.players.find(player => player.playerID === id);
         if (match) {
             return game;
         }
