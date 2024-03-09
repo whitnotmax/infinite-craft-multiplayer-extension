@@ -8,7 +8,7 @@ import "./ContentScriptApp.css";
 
 const DEFAULT_DATA = '{"elements":[{"text":"Water","emoji":"💧","discovered":false},{"text":"Fire","emoji":"🔥","discovered":false},{"text":"Wind","emoji":"🌬️","discovered":false},{"text":"Earth","emoji":"🌍","discovered":false}]}'
 const DATA_LOCALSTORAGE_KEY = 'infinite-craft-data';
-
+const INFINITE_CRAFT_URL = "https://neal.fun/infinite-craft/";
 export const WebSocketContext = createContext();
 export const GameStateContext = createContext();
 
@@ -33,7 +33,7 @@ const ContentScriptApp = () => {
     useEffect(() => {
         chrome.runtime.onMessage.addListener((data, sender) => {
             if (data.message === "reload") {
-                window.location.reload();
+                window.location.href = INFINITE_CRAFT_URL;
             }
         });
     }, []);
@@ -112,6 +112,10 @@ const ContentScriptApp = () => {
             return;
         } else {
             if (isMultiplayerMode) {
+                if (window.location.href != INFINITE_CRAFT_URL) {
+                    alert("Redirecting you to Infinite Craft (return to Infinite Craft Singleplayer Mode to stop this!)");
+                    window.location.href = INFINITE_CRAFT_URL;
+                }
                 if (localStorage[DATA_LOCALSTORAGE_KEY] != DEFAULT_DATA) {
                     setSavedCrafts(localStorage[DATA_LOCALSTORAGE_KEY]);
                     localStorage[DATA_LOCALSTORAGE_KEY] = DEFAULT_DATA;
