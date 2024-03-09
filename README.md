@@ -18,6 +18,8 @@ To install the extension in the browser, enable developer mode, select "Load unp
 
 You can change the URL of the server that the extension connects to by right-clicking the extension icon and accessing the options page (by default, it tries to connect to localhost).
 
+If you want to uninstall the extension and you care about your progress, make sure to return to singleplayer mode first (to restore your progress), otherwise it will be lost!
+
 ## Running the server
 The server code is located in the `server` directory. Run `yarn start-server` to automatically reload when the server code changes. 
 
